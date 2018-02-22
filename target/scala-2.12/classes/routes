@@ -1,0 +1,15 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           com.target.entity.controller.HomeController.index
+GET     /entityservice/:entity/find/:id         com.target.entity.controller.EntityController.find(entity,id)
+#POST    /entityservice/:entity/find        com.target.entity.controller.EntityController.find(entity)
+POST    /entityservice/:entity/update/:id     com.target.entity.controller.EntityController.update(entity,id)
+DELETE    /entityservice/:entity/delete/:id     com.target.entity.controller.EntityController.delete(entity,id)
+POST    /entityservice/:entity/create    com.target.entity.controller.EntityController.create(entity)
+
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
