@@ -1,7 +1,14 @@
 package com.target.entity.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.target.entity.businessservice.BaseBusinessService;
+import com.typesafe.config.Config;
 
 import play.mvc.Controller;
 import play.mvc.Http;
@@ -11,10 +18,27 @@ import play.mvc.Result;
 public class EntityController extends Controller{
 
 	BaseBusinessService ebs = new BaseBusinessService();
-	public Result find(String entity,String id) {
+	/** The object mapper. **/
+    private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
+    private final Config config;
+
+    @Inject
+    public EntityController(Config config) {
+        this.config = config;
+    }
+	
+	/*public Result find(String entity,String id) {
+		
+		ObjectNode node = OBJECTMAPPER.createObjectNode();
+		node.put("filter", )
+	}*/
+	
+	public Result find(String entity) {
 		Object finalResponse = null;
+		JsonNode reqBody = request().body().asJson();
 		try {
-			finalResponse = ebs.find(id);
+			//prepareRequestMap("find",entity);
+			finalResponse = ebs.find(reqBody, entity,config);
 
 			if (finalResponse != null) {
 
@@ -32,6 +56,7 @@ public class EntityController extends Controller{
 		System.out.println("Received update request for "+entity);
 		JsonNode reqBody = request().body().asJson();
 		 Object finalResponse = null;
+		 
 		 try {
 			finalResponse = ebs.update(reqBody);
 			 if (finalResponse != null) {
@@ -88,6 +113,13 @@ public class EntityController extends Controller{
 		Object ctx =  Http.Context.current().args.get("context");
 
 		return ctx;
+	}
+	
+	public static Map<String,String> prepareRequestMap(String operation, String entity) {
+		Map<String, String> reqMap = new HashMap<>();
+		reqMap.put("operation", operation);
+		reqMap.put("entity", entity);
+		return reqMap;
 	}
 
 }

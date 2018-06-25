@@ -31,3 +31,7 @@ libraryDependencies += "org.hibernate" % "hibernate-core" % "5.2.9.Final"
 
 libraryDependencies += "org.mongodb" % "mongo-java-driver" % "2.10.1"
 
+//libraryDependencies += "com.typesafe.sbteclipse" % "sbteclipse-plugin" % "5.2.2"
+
+libraryDependencies += "org.apache.solr" % "solr-solrj" % "7.3.0"
+

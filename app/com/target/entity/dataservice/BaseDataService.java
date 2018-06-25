@@ -1,27 +1,31 @@
 package com.target.entity.dataservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.impetus.datafab.core.Tube;
+import com.impetus.datafab.core.tube.factory.OperationType;
+import com.impetus.datafab.core.tube.factory.TubeFactory;
 import com.target.datastore.MongoQueryExecutor;
 import com.target.datastore.QueryExecutor;
+import com.typesafe.config.Config;
 
-public class BaseDataService {
-	//TODO
-	//Tube tube = TubeFactory.getTube(operation, source);
+public class BaseDataService { //DF controller
+	
+	Tube tube;
 	
 	QueryExecutor queryExec = new MongoQueryExecutor();
-	/*
-	public Object find(String id){
-		
-		return queryExec.executeQuery("FIND", id, "app.product");
-	      // findTemplate.executeQuery(consistentSubscribers, requestMap, bodyJson, response, ctx.getAuditTag(), ctx);
-	}*/
-	
-	public Object find(String id){
-		
-		return queryExec.executeQuery("FIND", id, "Product");
+	private Config config;
+
+
+	public Object find(JsonNode filter, String entity, Config conf){
+		config=conf;	
+		tube = TubeFactory.getTube(OperationType.FIND.getOperation());
+		tube.pourData(entity, "find", filter, conf);
+		String collectionName = config.getString(entity+".mongo.collection");		
+		return queryExec.executeQuery("FIND", "5b30d2b359aa6436facc60c9", collectionName);
 	      // findTemplate.executeQuery(consistentSubscribers, requestMap, bodyJson, response, ctx.getAuditTag(), ctx);
 	}
 	public Object create(JsonNode node){
+		tube = TubeFactory.getTube(OperationType.UPDATE.getOperation());
 		return queryExec.executeQuery("CREATE", node.toString(), "Product");
 	}
 	public Object delete(String id){

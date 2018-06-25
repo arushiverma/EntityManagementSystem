@@ -54,7 +54,7 @@ public class MongoQueryExecutor implements QueryExecutor{
 	private ObjectNode executeFindQuery(String query, String entity){
 		ObjectNode queryNode = constructQuery(query);
 		List<ObjectNode> responses = new ArrayList<ObjectNode>();
-		DB conn = createMongoConnection("config");
+		DB conn = createMongoConnection("appdata");
 		DBObject dbResponse;
 		//String collectionName = config.getString(entity+"mongo.collection");
 		DBCollection table = conn.getCollection("app.products");//TODO get table by entity
