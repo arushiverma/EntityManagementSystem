@@ -1,4 +1,4 @@
-package com.target.datastore;
+package com.impetus.datastore;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 

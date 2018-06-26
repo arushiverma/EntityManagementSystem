@@ -1,4 +1,4 @@
-package com.target.entity.controller;
+package com.impetus.entity.controller;
 
 import play.mvc.*;
 

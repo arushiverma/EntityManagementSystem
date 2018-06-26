@@ -1,4 +1,4 @@
-package com.target.datastore.utils;
+package com.impetus.datastore.utils;
 
 /** Defines Operator types. */
 public enum OperatorType {

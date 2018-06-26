@@ -1,4 +1,4 @@
-package com.target.entity.constants;
+package com.impetus.entity.constants;
 
 public class EntityConstants {
 	

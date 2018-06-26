@@ -1,4 +1,4 @@
-package com.target.entity.controller;
+package com.impetus.entity.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import javax.inject.Inject;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.target.entity.businessservice.BaseBusinessService;
+import com.impetus.entity.businessservice.BaseBusinessService;
 import com.typesafe.config.Config;
 
 import play.mvc.Controller;

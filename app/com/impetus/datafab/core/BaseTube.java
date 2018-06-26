@@ -1,21 +1,19 @@
 package com.impetus.datafab.core;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.servicesource.datafab.core.valves.DataStoreValvesEnum;
-import com.servicesource.datafab.core.valves.MongoValve;
-import com.servicesource.datafab.core.valves.SolrValve;
+import com.impetus.datafab.valve.MongoValve;
+import com.impetus.datafab.valve.SolrValve;
+import com.impetus.datafab.valve.Valve;
 import com.typesafe.config.Config;
 
 
 
-public class BaseTube implements Tube {
-	
-	 /** The conf. */
-    //private static play.Configuration conf = Play.application().configuration();	
+public abstract class BaseTube implements Tube {
 	
 	
 	public TubeResponse<ValveResponse> pourData(String entity, String operation,JsonNode bodyJson, Config conf) {        
@@ -25,15 +23,31 @@ public class BaseTube implements Tube {
 	     methodFlowKeys.add(operation);
 	     FlowDetails flows = fetchDataflow(operation, conf, methodFlowKeys);
 	     System.out.println(flows);
-        //iterate on flows -- check store-- call its trabsformer and executor and accumulate responses.
-//	     /List<? extends DataFlowTask> tasks = dataFlow.getTasks();
-	   /*  if (dataStore.equals("mongo")) {
-	            return new MongoValve(task);
-	        } else if ("solr") {
-	            return new SolrValve(task);
-	        }*/
+	     Map<Integer, StoreTuple> datastores  = flows.getDataflowTuples();
+       
+	     List<Valve> subscribers=getSubscribers(datastores);
+	     TubeResponse<ValveResponse> response = new TubeResponse<ValveResponse>();
+	     streamToPersistentValves(subscribers, bodyJson, response); // for multithreading response is being sent in argument
+	    	 
+	     
         return null;
     }
+
+	private List<Valve> getSubscribers(Map<Integer, StoreTuple> datastores) {
+		List<Valve> valves = new LinkedList<>();
+		for(StoreTuple store : datastores.values()) {
+	    	 String storename= store.getStore();
+	    	 switch(storename) {
+	    		 case "mongodb":
+	    			 valves.add(new MongoValve());
+	    		 	break;
+	    		 case "solr":
+	    			 valves.add(new SolrValve());
+	    		 	break;
+	    	 }
+	     }
+		return valves;
+	}
 
 	private FlowDetails fetchDataflow(String operation, Config conf, List<String> methodFlowKeys) {
 		Config dataflowconf=conf.getConfig("dataflow-definitions");
@@ -41,8 +55,7 @@ public class BaseTube implements Tube {
 	     for (String methodFlowKey : methodFlowKeys) {
 	    	 if(dataflowconf.hasPath(methodFlowKey)) {
 	    		 
-	    		 Map<String, Object> flowDetailsInternalKey = (Map<String, Object>) dataflowconf.getAnyRef(methodFlowKey);
-	                
+	    		 Map<String, Object> flowDetailsInternalKey = (Map<String, Object>) dataflowconf.getAnyRef(methodFlowKey);	                
 
 	                Object flowDetailsValue = flowDetailsInternalKey.get("data-flow");
 	                for (Map.Entry<String, Object> storeTupleEntry : ((Map<String, Object>) flowDetailsValue).entrySet()) {
@@ -61,5 +74,8 @@ public class BaseTube implements Tube {
 	     }
 	     return flowDetails;
 	}
+	
+	protected abstract void streamToPersistentValves(List<Valve> consistentSubscribers,JsonNode bodyJson,
+            TubeResponse<ValveResponse> response);
 
 }

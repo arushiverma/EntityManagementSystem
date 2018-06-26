@@ -1,4 +1,4 @@
-package com.target.datastore;
+package com.impetus.datastore;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -8,6 +8,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.impetus.datastore.utils.QueryUtil;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -16,7 +17,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.WriteResult;
 import com.mongodb.util.JSON;
-import com.target.datastore.utils.QueryUtil;
 import com.typesafe.config.Config;
 
 public class MongoQueryExecutor implements QueryExecutor{

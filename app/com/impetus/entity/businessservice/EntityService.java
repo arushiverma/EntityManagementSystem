@@ -1,7 +1,7 @@
-package com.target.entity.businessservice;
+package com.impetus.entity.businessservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.target.entity.dataservice.BaseDataService;
+import com.impetus.entity.dataservice.BaseDataService;
 import com.typesafe.config.Config;
 
 public interface EntityService {

@@ -1,4 +1,4 @@
-package com.target.datastore.utils;
+package com.impetus.datastore.utils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.target.entity.constants.EntityConstants;
+import com.impetus.entity.constants.EntityConstants;
 
 public class QueryUtil {
 	

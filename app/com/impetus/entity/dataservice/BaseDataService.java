@@ -1,11 +1,11 @@
-package com.target.entity.dataservice;
+package com.impetus.entity.dataservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.impetus.datafab.core.Tube;
 import com.impetus.datafab.core.tube.factory.OperationType;
 import com.impetus.datafab.core.tube.factory.TubeFactory;
-import com.target.datastore.MongoQueryExecutor;
-import com.target.datastore.QueryExecutor;
+import com.impetus.datastore.MongoQueryExecutor;
+import com.impetus.datastore.QueryExecutor;
 import com.typesafe.config.Config;
 
 public class BaseDataService { //DF controller

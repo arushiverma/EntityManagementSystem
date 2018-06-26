@@ -1,4 +1,4 @@
-package com.target.datastore.builder;
+package com.impetus.datastore.builder;
 
 public class MongoQueryBuilder implements QueryBuilder {
 
