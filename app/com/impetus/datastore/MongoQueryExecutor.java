@@ -8,7 +8,9 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.impetus.datafab.core.ValveResponse;
 import com.impetus.datastore.utils.QueryUtil;
+import com.impetus.entity.constants.EntityConstants;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -22,25 +24,26 @@ import com.typesafe.config.Config;
 public class MongoQueryExecutor implements QueryExecutor{
 
 	private MongoClient mongo;
-	private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
+	private static final ObjectMapper OBJECTMAPPER = EntityConstants.OBJECTMAPPER;
 	private Config config = null;
 
 	
 	
-	public ObjectNode executeQuery(String operation, String query, String entity){
-		ObjectNode result=null;
+	public ValveResponse executeQuery(String operation, String query, String entity){
+		ValveResponse result=null;
 		if (operation != null) {
             switch (operation) {
-                case "FIND":
+                case "find":
+                case "findOne":
                 	result = executeFindQuery(query, entity);                	
                     break;
-                case "UPDATE":
+                case "update":
                 	result = executeUpdateQuery(query, entity);                	
                     break;
-                case "CREATE":
+                case "create":
                 	result = executeCreateQuery(query, entity);
                 	break;
-                case "DELETE":
+                case "delete":
                 	result = executeDeleteQuery(query, entity);
                 	break;
                 default:
@@ -51,24 +54,20 @@ public class MongoQueryExecutor implements QueryExecutor{
 		
 		
 	}
-	private ObjectNode executeFindQuery(String query, String entity){
-		ObjectNode queryNode = constructQuery(query);
+	private ValveResponse executeFindQuery(String query, String entity){
+		System.out.println("Mongo query : " + query);
+		ValveResponse result = new ValveResponse();
 		List<ObjectNode> responses = new ArrayList<ObjectNode>();
 		DB conn = createMongoConnection("appdata");
 		DBObject dbResponse;
-		//String collectionName = config.getString(entity+"mongo.collection");
-		DBCollection table = conn.getCollection("app.products");//TODO get table by entity
-		BasicDBObject searchQuery = (BasicDBObject) JSON.parse(queryNode.toString());
+		DBCollection table = conn.getCollection(entity);//TODO get table by entity
+		BasicDBObject searchQuery = (BasicDBObject) JSON.parse(query);
 		
 		ObjectNode node = OBJECTMAPPER.createObjectNode();
 		DBCursor cursor = table.find(searchQuery);
 		int recCount = cursor.size();
-		while (cursor.hasNext()) {
-			
+		while (cursor.hasNext()) {			
 			dbResponse = cursor.next();
-			
-			
-			
             try {
 				node = OBJECTMAPPER.readValue(dbResponse.toString(), ObjectNode.class);
 			} catch (IOException e) {
@@ -80,12 +79,13 @@ public class MongoQueryExecutor implements QueryExecutor{
             System.out.println(" Found " + recCount+ " records");
             
 		}
-		return node;
+		result.addResponse(node);
+		return result;
 		
 		
 	}
 	
-	private ObjectNode executeUpdateQuery(String query, String entity){
+	private ValveResponse executeUpdateQuery(String query, String entity){
 		ObjectNode updateResp = OBJECTMAPPER.createObjectNode();
 		query = QueryUtil.parseRequest(query);
 		if (query!=null) {
@@ -108,11 +108,13 @@ public class MongoQueryExecutor implements QueryExecutor{
 				}
 			} 
 		}
-		return updateResp;
+		ValveResponse result = new ValveResponse();
+		result.addResponse(updateResp);
+		return result;
 	}
 	
-	private ObjectNode executeCreateQuery(String query, String entity){
-		ObjectNode updateResp = OBJECTMAPPER.createObjectNode();
+	private ValveResponse executeCreateQuery(String query, String entity){
+		ObjectNode updateResp = OBJECTMAPPER.createObjectNode();		
 		query = QueryUtil.parseRequest(query);
 		DBObject document =  (BasicDBObject) JSON.parse(query);
 		DB conn = createMongoConnection("config");
@@ -133,10 +135,12 @@ public class MongoQueryExecutor implements QueryExecutor{
 				e.printStackTrace();
 			}
 		}
-		return updateResp;
+		ValveResponse response = new ValveResponse();
+		response.addResponse(updateResp);
+		return response;
 	}
 	
-	private ObjectNode executeDeleteQuery(String id, String entity){
+	private ValveResponse executeDeleteQuery(String id, String entity){
 		ObjectNode updateResp = OBJECTMAPPER.createObjectNode();
 		ObjectNode queryNode = constructQuery(id);
 		//id = QueryUtil.parseRequest(id);
@@ -162,7 +166,9 @@ public class MongoQueryExecutor implements QueryExecutor{
 				}
 			} 
 		}
-		return updateResp;
+		ValveResponse response = new ValveResponse();
+		response.addResponse(updateResp);
+		return response;
 	}
 	private DB createMongoConnection(String database){
 		if (mongo==null){

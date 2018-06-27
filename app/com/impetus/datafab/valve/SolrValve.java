@@ -1,60 +1,52 @@
 package com.impetus.datafab.valve;
 
+import com.impetus.datafab.core.ValveResponse;
+import com.impetus.datastore.QueryExecutor;
+import com.impetus.datastore.SolrQueryExecutor;
+import com.impetus.datastore.builder.SolrQueryBuilder;
+
 /** The Class SolrValve. */
-public class SolrValve implements Valve {
+public class SolrValve implements Valve<ValveResponse> {
 	
 	@Override
     public String getName() {
         return "Solr Subscriber";
     }
-
-	/*
-
-
-    *//** The solr query executor. *//*
+   
     private SolrQueryExecutor solrQueryExecutor;    
+    private SolrQueryBuilder solrQB;
+    private String dependency;
 
-    *//** Solr transformer **//*
-    private SolrTransformer solrTransformer;
 
-   
+  
+    public SolrQueryBuilder getQueryBuilder() {
+		return solrQB;
+	}
 
-    *//** Instantiates a new solr valve.
-     *
-     * @param dataFlowTask
-     *            the data flow task *//*
-    public SolrValve() {
+
+	public SolrValve() {
         solrQueryExecutor = new SolrQueryExecutor();       
-        solrTransformer = new SolrTransformer();
+        solrQB = new SolrQueryBuilder();
     }
-
-    
-     * (non-Javadoc)
-     * @see com.servicesource.datafab.core.valves.Valve#getName()
-     
-    @Override
-    public String getName() {
-        return "Solr Subscriber";
+	
+	public SolrValve(String dependency) {
+        solrQueryExecutor = new SolrQueryExecutor();       
+        solrQB = new SolrQueryBuilder();
+        this.dependency=dependency;
     }
-
-    
-     * (non-Javadoc)
-     * @see com.servicesource.datafab.core.valves.PersistentValve#getQueryBuilder()
-     
    
    
-    protected QueryExecutor getQueryExecutor() {
+    public QueryExecutor getQueryExecutor() {
         return solrQueryExecutor;
     }
-
     
+    public String getDependency() {
+		return dependency;
+	}
 
-     (non-Javadoc)
-     * @see com.servicesource.datafab.core.valves.PersistentValve#getTransformer()
-     
+	public void setDependency(String dependency) {
+		this.dependency = dependency;
+	}
     
-    protected Transformer getTransformer(){
-        return solrTransformer;
-    }
-
-*/}
+   
+}

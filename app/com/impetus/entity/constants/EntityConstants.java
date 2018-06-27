@@ -1,5 +1,7 @@
 package com.impetus.entity.constants;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class EntityConstants {
 	
 	/** The date. */
@@ -41,6 +43,8 @@ public class EntityConstants {
     
     /** The oid. */
     public static String OID = "$oid";
+    
+    public static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
 
 
 }

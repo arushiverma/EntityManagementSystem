@@ -1,9 +1,9 @@
 package com.impetus.datastore;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.impetus.datafab.core.ValveResponse;
 
 public interface QueryExecutor {
 
-	ObjectNode executeQuery(String operation, String query, String entity);
+	ValveResponse executeQuery(String operation, String query, String entity);
 
 }

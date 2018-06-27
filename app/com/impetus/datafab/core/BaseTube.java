@@ -27,19 +27,21 @@ public abstract class BaseTube implements Tube {
        
 	     List<Valve> subscribers=getSubscribers(datastores);
 	     TubeResponse<ValveResponse> response = new TubeResponse<ValveResponse>();
-	     streamToPersistentValves(subscribers, bodyJson, response); // for multithreading response is being sent in argument
+	     streamToPersistentValves(subscribers, bodyJson, response, entity, conf); // for multithreading response is being sent in argument
 	    	 
 	     
-        return null;
+        return response;
     }
 
 	private List<Valve> getSubscribers(Map<Integer, StoreTuple> datastores) {
 		List<Valve> valves = new LinkedList<>();
 		for(StoreTuple store : datastores.values()) {
 	    	 String storename= store.getStore();
+	    	 String queryDependency = store.getDependencies().get(0);
+	    	 
 	    	 switch(storename) {
 	    		 case "mongodb":
-	    			 valves.add(new MongoValve());
+	    			 valves.add(new MongoValve(queryDependency));
 	    		 	break;
 	    		 case "solr":
 	    			 valves.add(new SolrValve());
@@ -76,6 +78,6 @@ public abstract class BaseTube implements Tube {
 	}
 	
 	protected abstract void streamToPersistentValves(List<Valve> consistentSubscribers,JsonNode bodyJson,
-            TubeResponse<ValveResponse> response);
+            TubeResponse<ValveResponse> response, String entity, Config conf);
 
 }

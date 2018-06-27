@@ -18,16 +18,17 @@ public interface Find {
      *
      * @param consistentSubscribers
      *  the consistent subscribers.
-     * @param requestMap
-     *  the request map.
      * @param bodyJson
      *  the request payload.
      * @param response
      *  the response.
+     * @param entity TODO
+     * @param requestMap
+     *  the request map.
      * @param auditTag
      *  the audit tag.
      * @param ctx TODO
      */
     void executeQuery(List<Valve> consistentSubscribers, JsonNode bodyJson,
-            TubeResponse<ValveResponse> response);
+            TubeResponse<ValveResponse> response, String entity);
 }

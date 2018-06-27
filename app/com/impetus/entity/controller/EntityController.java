@@ -41,7 +41,7 @@ public class EntityController extends Controller{
 			finalResponse = ebs.find(reqBody, entity,config);
 
 			if (finalResponse != null) {
-
+				System.out.println(finalResponse.toString());
 				return ok(finalResponse.toString());
 			}
 			} 

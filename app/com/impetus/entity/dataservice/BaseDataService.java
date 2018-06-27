@@ -2,6 +2,8 @@ package com.impetus.entity.dataservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.impetus.datafab.core.Tube;
+import com.impetus.datafab.core.TubeResponse;
+import com.impetus.datafab.core.ValveResponse;
 import com.impetus.datafab.core.tube.factory.OperationType;
 import com.impetus.datafab.core.tube.factory.TubeFactory;
 import com.impetus.datastore.MongoQueryExecutor;
@@ -16,13 +18,11 @@ public class BaseDataService { //DF controller
 	private Config config;
 
 
-	public Object find(JsonNode filter, String entity, Config conf){
+	public ValveResponse find(JsonNode filter, String entity, Config conf){
 		config=conf;	
 		tube = TubeFactory.getTube(OperationType.FIND.getOperation());
-		tube.pourData(entity, "find", filter, conf);
-		String collectionName = config.getString(entity+".mongo.collection");		
-		return queryExec.executeQuery("FIND", "5b30d2b359aa6436facc60c9", collectionName);
-	      // findTemplate.executeQuery(consistentSubscribers, requestMap, bodyJson, response, ctx.getAuditTag(), ctx);
+		TubeResponse<ValveResponse> response = tube.pourData(entity, OperationType.FIND.getOperation(), filter, conf);
+		return response.getLastResponse();
 	}
 	public Object create(JsonNode node){
 		tube = TubeFactory.getTube(OperationType.UPDATE.getOperation());

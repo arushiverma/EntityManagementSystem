@@ -3,13 +3,13 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                           com.target.entity.controller.HomeController.index
-#GET     /datafabric/:entity/find/:id         com.target.entity.controller.EntityController.find(entity)
-POST    /datafabric/:entity/find        com.target.entity.controller.EntityController.find(entity)
-POST    /datafabric/:entity/update/:id     com.target.entity.controller.EntityController.update(entity,id)
-#POST    /datafabric/:entity/update     com.target.entity.controller.EntityController.update(entity)
-DELETE    /datafabric/:entity/delete/:id     com.target.entity.controller.EntityController.delete(entity,id)
-POST    /datafabric/:entity/create    com.target.entity.controller.EntityController.create(entity)
+GET     /                           com.impetus.entity.controller.HomeController.index
+#GET     /datafabric/:entity/find/:id         com.impetus.entity.controller.EntityController.find(entity)
+POST    /datafabric/:entity/find        com.impetus.entity.controller.EntityController.find(entity)
+POST    /datafabric/:entity/update/:id     com.impetus.entity.controller.EntityController.update(entity,id)
+#POST    /datafabric/:entity/update     com.impetus.entity.controller.EntityController.update(entity)
+DELETE    /datafabric/:entity/delete/:id     com.impetus.entity.controller.EntityController.delete(entity,id)
+POST    /datafabric/:entity/create    com.impetus.entity.controller.EntityController.create(entity)
 
 
 # Map static resources from the /public folder to the /assets URL path
