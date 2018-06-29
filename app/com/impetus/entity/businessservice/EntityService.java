@@ -13,12 +13,12 @@ public interface EntityService {
 		return dataService.find(requestBody, entity, conf);
 	}
 	
-	Object update(JsonNode requestBody) throws Exception;
+	Object update(JsonNode requestBody,final String entity, Config conf) throws Exception;
 	
-	Object delete(String requestBody) throws Exception;
+	Object delete(String requestBody, final String entity, Config conf) throws Exception;
 	
-	default Object create(JsonNode requestBody) throws Exception{
-		return dataService.create(requestBody);
+	default Object create(JsonNode requestBody, String entity, Config conf) throws Exception{
+		return dataService.create(requestBody, entity, conf);
 	}
 
 

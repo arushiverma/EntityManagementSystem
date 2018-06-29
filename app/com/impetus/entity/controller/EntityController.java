@@ -35,6 +35,7 @@ public class EntityController extends Controller{
 	
 	public Result find(String entity) {
 		Object finalResponse = null;
+		System.out.println("===received request====");
 		JsonNode reqBody = request().body().asJson();
 		try {
 			//prepareRequestMap("find",entity);
@@ -58,7 +59,7 @@ public class EntityController extends Controller{
 		 Object finalResponse = null;
 		 
 		 try {
-			finalResponse = ebs.update(reqBody);
+			finalResponse = ebs.update(reqBody, entity, config);
 			 if (finalResponse != null) {
 					return ok(finalResponse.toString());
 				}
@@ -75,7 +76,7 @@ public class EntityController extends Controller{
 		System.out.println("Received delete request for "+entity);
 		 Object finalResponse = null;
 		 try {
-			finalResponse = ebs.delete(id);
+			finalResponse = ebs.delete(id, entity, config);
 			 if (finalResponse != null) {
 					return ok(finalResponse.toString());
 				}
@@ -93,7 +94,7 @@ public class EntityController extends Controller{
 		JsonNode reqBody = request().body().asJson();
 		 Object finalResponse = null;
 		 try {
-			finalResponse = ebs.create(reqBody);
+			finalResponse = ebs.create(reqBody, entity, config);
 			 if (finalResponse != null) {
 					return ok(finalResponse.toString());
 				}

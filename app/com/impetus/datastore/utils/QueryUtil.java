@@ -234,5 +234,13 @@ public class QueryUtil {
      }
      return node;
  }
+ 
+ public static boolean isFindOne(JsonNode node) {
+		ObjectNode req = (ObjectNode)node.get("filter");
+		if(req.has(EntityConstants.ID)) {
+			return true;
+		}
+		return false;
+	}
 
 }

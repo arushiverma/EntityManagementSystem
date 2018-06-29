@@ -2,6 +2,7 @@ package com.impetus.entity.businessservice;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.impetus.entity.dataservice.BaseDataService;
+import com.typesafe.config.Config;
 
 public class BaseBusinessService implements EntityService{
 	
@@ -10,15 +11,15 @@ public class BaseBusinessService implements EntityService{
 
     
     @Override //TODO fetch service by factory
-    public Object update(JsonNode requestBody) throws Exception {
-        BaseDataService entityService = new BaseDataService();
-        return entityService.update(requestBody);
+    public Object update(JsonNode requestBody, final String entity, Config conf) throws Exception {
+        BaseDataService entityService = new BaseDataService(conf);
+        return entityService.update(requestBody, entity);
     }
     
     @Override //TODO fetch service by factory
-    public Object delete(String requestBody) throws Exception {
-        BaseDataService entityService = new BaseDataService();
-        return entityService.delete(requestBody);
+    public Object delete(String requestBody, final String entity, Config conf) throws Exception {
+        BaseDataService entityService = new BaseDataService(conf);
+        return entityService.delete(requestBody,entity);
     }
     
     

@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.impetus.datafab.core.tube.factory.OperationType;
 import com.impetus.datafab.valve.MongoValve;
 import com.impetus.datafab.valve.SolrValve;
 import com.impetus.datafab.valve.Valve;
+import com.impetus.datastore.utils.QueryUtil;
 import com.typesafe.config.Config;
 
 
@@ -17,9 +19,10 @@ public abstract class BaseTube implements Tube {
 	
 	
 	public TubeResponse<ValveResponse> pourData(String entity, String operation,JsonNode bodyJson, Config conf) {        
-       
+		 boolean isFindOne = QueryUtil.isFindOne(bodyJson);
+		 operation = isFindOne ? OperationType.FIND_ONE.getOperation():operation;
 		 List<String> methodFlowKeys = new ArrayList<String>();
-		 methodFlowKeys.add(operation + "."+ entity );
+		 methodFlowKeys.add(operation + "-"+ entity );
 	     methodFlowKeys.add(operation);
 	     FlowDetails flows = fetchDataflow(operation, conf, methodFlowKeys);
 	     System.out.println(flows);
@@ -37,7 +40,7 @@ public abstract class BaseTube implements Tube {
 		List<Valve> valves = new LinkedList<>();
 		for(StoreTuple store : datastores.values()) {
 	    	 String storename= store.getStore();
-	    	 String queryDependency = store.getDependencies().get(0);
+	    	 String queryDependency = store.getDependencies().size()>0?store.getDependencies().get(0):null;
 	    	 
 	    	 switch(storename) {
 	    		 case "mongodb":
@@ -79,5 +82,7 @@ public abstract class BaseTube implements Tube {
 	
 	protected abstract void streamToPersistentValves(List<Valve> consistentSubscribers,JsonNode bodyJson,
             TubeResponse<ValveResponse> response, String entity, Config conf);
+	
+	
 
 }

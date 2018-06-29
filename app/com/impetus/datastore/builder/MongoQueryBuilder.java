@@ -17,12 +17,13 @@ public class MongoQueryBuilder implements QueryBuilder {
 	@Override
 	public String constructQuery(JsonNode node, String operation, ValveResponse prevResp) {
 		// TODO Auto-generated method stub
+		JsonNode req = null;
 		switch(operation) {
 		case "findOne":
 			List<String> ids = prevResp.getResponses();
 			return prepareFilterForInQuery(ids).toString();		
 		case "find":
-			JsonNode req=node.get("filter");
+			req=node.get("filter");
 			if(req.has(EntityConstants.ID)) {
 				return constructIdQuery(req.get(EntityConstants.ID).asText()).toString();
 			}
@@ -30,7 +31,7 @@ public class MongoQueryBuilder implements QueryBuilder {
 		
 		}
 		
-		return node.asText();
+		return req.toString();
 	}
 	
 	

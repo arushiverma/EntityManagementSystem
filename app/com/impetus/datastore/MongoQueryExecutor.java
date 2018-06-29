@@ -26,6 +26,7 @@ public class MongoQueryExecutor implements QueryExecutor{
 	private MongoClient mongo;
 	private static final ObjectMapper OBJECTMAPPER = EntityConstants.OBJECTMAPPER;
 	private Config config = null;
+	private final String dbName="appdata";
 
 	
 	
@@ -75,11 +76,13 @@ public class MongoQueryExecutor implements QueryExecutor{
 				e.printStackTrace();
 			}
             QueryUtil.parseResult(node, null, null);
-            //responses.add(node);
-            System.out.println(" Found " + recCount+ " records");
+            responses.add(node);
+            
             
 		}
-		result.addResponse(node);
+		System.out.println(" Found " + recCount+ " records");
+		result.addResponse(responses);
+		result.setNumFound(recCount);
 		return result;
 		
 		
@@ -90,8 +93,8 @@ public class MongoQueryExecutor implements QueryExecutor{
 		query = QueryUtil.parseRequest(query);
 		if (query!=null) {
 			DBObject document = (BasicDBObject) JSON.parse(query);
-			DB conn = createMongoConnection("config");
-			DBCollection dbCollection = conn.getCollection("app.products");
+			DB conn = createMongoConnection(dbName);
+			DBCollection dbCollection = conn.getCollection(entity);
 			WriteResult result = null;
 			if (dbCollection != null) {
 				result = dbCollection.save(document);
@@ -117,8 +120,8 @@ public class MongoQueryExecutor implements QueryExecutor{
 		ObjectNode updateResp = OBJECTMAPPER.createObjectNode();		
 		query = QueryUtil.parseRequest(query);
 		DBObject document =  (BasicDBObject) JSON.parse(query);
-		DB conn = createMongoConnection("config");
-		DBCollection dbCollection = conn.getCollection("app.products");
+		DB conn = createMongoConnection(dbName);
+		DBCollection dbCollection = conn.getCollection(entity);
 		WriteResult result = null;
 		if (dbCollection != null) {
 			result = dbCollection.insert(document);
@@ -126,8 +129,8 @@ public class MongoQueryExecutor implements QueryExecutor{
 		if (result != null && result.getError() == null) {
 			try {
 				updateResp = (ObjectNode) OBJECTMAPPER.readValue(result.toString(), JsonNode.class);
-				System.out.println("Updated object ");
-				updateResp.put("message", "Updated " +updateResp.get("n") + " records");
+				System.out.println("created object");
+				updateResp.put("message", "Created 1 " + entity + " record");
 				QueryUtil.parseResult(updateResp, null, null);
 				//result.addResponse(docJson);
 			}catch (IOException e) {
@@ -147,8 +150,8 @@ public class MongoQueryExecutor implements QueryExecutor{
 		if (queryNode!=null) {
 			//DBObject document = (BasicDBObject) JSON.parse(queryNode);
 			BasicDBObject searchQuery = (BasicDBObject) JSON.parse(queryNode.toString());
-			DB conn = createMongoConnection("config");
-			DBCollection dbCollection = conn.getCollection("app.products");
+			DB conn = createMongoConnection(dbName);
+			DBCollection dbCollection = conn.getCollection(entity);
 			WriteResult result = null;
 			if (dbCollection != null) {
 				result = dbCollection.remove(searchQuery);
